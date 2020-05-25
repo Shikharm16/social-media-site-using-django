@@ -1,0 +1,34 @@
+{% extends "socio/base.html" %}
+{% block content %}
+<div>
+  <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'socio-feed'%}">Back</a>
+</div>
+      
+        <article class="media content-section row">
+          <img class="rounded-circle article-img" src="{{ object.author.profile.profile_image.url }}">
+          <div class="media-body">
+
+            <div class="article-metadata">
+              <a class="mr-2" href="#">{{ object.author }}</a>
+              <small class="text-muted">{{ object.date_posted|date:"F d, Y" }}</small>
+              {% if object.author == user %}
+                <div>
+                  <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'post-update' object.id %}">Update</a>
+                  <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' object.id %}">Delete</a>
+                </div>
+              {% endif %}
+            </div>
+            <p class="article-content">
+            <img src="{{object.image.url}}" class="imgpost">
+            </p>
+            <h2 class="article-title">{{ object.title }}</h2>
+            {% if object.link != "" %}
+              <p class="article-content">
+              <a href="{{ object.link }}" target="_blank">{{ object.link }}</a>
+              </p>
+            {% endif %}
+            <p class="article-content">{{ object.caption }}</p>
+          </div>
+        </article>
+      
+{% endblock content %}

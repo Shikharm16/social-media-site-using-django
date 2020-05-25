@@ -1,0 +1,29 @@
+{% extends "socio/base.html" %}
+{% block content %}
+
+      <div class="row topbar">
+
+          <img src="/static/images/topbar.PNG" class="imgtopbar">
+          <a href="{% url 'post-create'%}">
+          <button class="btn" type="submit">New Post</button>
+          </a>
+      </div>
+{% for post in posts %}
+<article class="media content-section row">
+          <img class="rounded-circle article-img" src="{{ post.author.profile.profile_image.url }}">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="{% url 'socio-profile'%}">{{ post.author }}
+              </a>
+              <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
+            </div>
+            <img src="{{ post.image.url}}" class="imgpost">
+            <h2>{{ post.title }}</h2>
+            <a class="article-title" href="{% url 'post-detail' post.id %}" style="color: green;">Click to read Caption!</a>
+            
+          </div>
+</article>
+
+
+{% endfor %}
+{% endblock content %}
