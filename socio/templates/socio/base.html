@@ -21,8 +21,13 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-
+<style type="text/css">
+  .nul{
+    padding: 2px 4px;
+  }
+</style>
 
 </head>
 <body style="background: #F5F5F5;">
@@ -46,54 +51,46 @@
     </ul>
 
  <ul class="nav navbar-nav navbar-right">
-       
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'socio-home' %}">Home</a>
+      
+      <li class="nav-item nul" >
+        <a class="nav-link" href="{% url 'socio-home' %}"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
       </li>
       {% if user.is_authenticated %}
-      
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'socio-feed' %}">Feed</a>
+      <li class="nav-item nul">
+        <a class="nav-link" href="{% url 'socio-filter' %}"><i class="fa fa-search" aria-hidden="true"></i> Search</a>
       </li>
       
-     
+      <li class="nav-item nul">
+        <a class="nav-link" href="{% url 'socio-feed' %}"><i class="fa fa-user" aria-hidden="true"></i> Feed</a>
+      </li>
+      
+      
+      <li class="nav-item dropdown nul">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <img src="{{ user.profile.profile_image.url }}" width="30" height="30" class="rounded-circle" alt="display logo">
+                {{ user.first_name}} {{ user.last_name}} 
+              </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{% url 'socio-profile' %}"><i class="fa fa-user" aria-hidden="true"></i> Update Profile</a>
+            <a class="dropdown-item" href="{% url 'password_reset' %}"><i class="fa fa-key" aria-hidden="true"></i> Change Password</a>
+            <div class="dropdown-divider"></div>
 
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <img src="{{ user.profile.profile_image.url }}" width="30" height="30" class="rounded-circle" alt="display logo">
-          {{ user.first_name}} {{ user.last_name}} 
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="{% url 'socio-profile' %}">Update Profile</a>
-          <a class="dropdown-item" href="{% url 'password_reset' %}">Change Password</a>
-          <div class="dropdown-divider"></div>
-
-          <a class="dropdown-item" href="{% url 'socio-delete' %}">Delete Account</a>
-          <!-- <a class="dropdown-item" href="{% url 'logout' %}">Logout</a> -->
-        </div>
+            <a class="dropdown-item" href="{% url 'socio-delete' %}"><i class="fa fa-cog" aria-hidden="true"></i> Delete Account</a>
+            <a class="dropdown-item" href="{% url 'logout' %}"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a>
+          </div>
         </li>
-         <li class="nav-item">
-        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-      </li>
-      <!-- <li class="nav-item">
-        <a class="nav-link" href="{% url 'socio-profile' %}">{{ user.username}}</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-      </li> -->
+         <!-- <li class="nav-item"></li> -->
+
       {% else %}
-       <li class="nav-item">
-        <a class="nav-link" href="{% url 'login' %}">Login</a>
+       <li class="nav-item nul">
+        <a class="nav-link" href="{% url 'login' %}"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a>
       </li> 
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'socio-register' %}">Register</a>
+      <li class="nav-item nul">
+        <a class="nav-link" href="{% url 'socio-register' %}"><i class="fa fa-user-plus" aria-hidden="true"></i> Register</a>
       </li>
       {% endif %}
       </ul>
-  <!--   <form class="form-inline my-2 my-lg-1">
-       
-      <button class="btn btn-dark my-2 my-sm-0" type="submit">login / signup</button>
-    </form> -->
+
   </div>
 </nav>
 

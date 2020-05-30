@@ -5,6 +5,7 @@ from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from .models import Post
+from .filters import PostFilter
 from django.views.generic import (
     ListView,
     DetailView,
@@ -65,6 +66,13 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 @login_required
 def delete_user(request):
+    context = {
+        'title':'Deactivate Account'
+    }
+    return render(request,'socio/deactivate.html',context)
+
+@login_required
+def delete_user_confirm(request):
     context = {}
     if request.user.is_authenticated:
         username = request.user.username
@@ -92,10 +100,15 @@ def signup(request):
         form=UserRegisterForm()
     return render(request,'socio/signup.html',{'form':form,'title':'Sign up to socio'})
 
+@login_required
+def filter_list(request):
+    #ordering = ['-date_posted']
+    f = PostFilter(request.GET, queryset=Post.objects.all())
+    return render(request, 'socio/filtered.html', {'filter': f,'title':'Result search Post'})
 
 def home(request):
     context = {
-        'title':'Home'
+        'title':'Socio Home'
     }
     return render(request,'socio/home.html',context)
 

@@ -1,0 +1,41 @@
+{% extends "socio/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+ <div class="content-section">
+        <form action="">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Search for your wish!</legend>
+                {{ filter.form|crispy }}
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Search</button>
+            </div>
+        </form>
+ </div>
+    
+    {% if filter.qs %}
+    {% for obj in filter.qs %}
+    <article class="media content-section row">
+          <img class="rounded-circle article-img" src="{{  obj.author.profile.profile_image.url }}">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="#">{{ obj.author }}
+              </a>
+              <small class="text-muted">{{ obj.date_posted|date:"F d, Y" }}</small>
+            </div>
+            <img src="{{ obj.image.url }}" class="imgpost">
+            <h2>{{ obj.title }}</h2>
+            <a class="article-title" href="{% url 'post-detail' obj.id %}" style="color: green;">Click to read Caption!</a>
+          </div>
+	</article>
+	{% endfor %}
+	{% else %}
+	<article class="media content-section row">
+		<div class="media-body">
+				<h2> No Post to display!!</h2>
+		</div>
+	</article>
+	{% endif %}
+{% endblock %}

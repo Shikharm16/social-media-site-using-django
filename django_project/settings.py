@@ -33,6 +33,8 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'socio.apps.SocioConfig',
     'crispy_forms',
+    'django_filters',
+    'tinymce',
     'django.contrib.admin',
     'registration',
     'django.contrib.auth',

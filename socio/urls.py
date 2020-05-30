@@ -24,4 +24,6 @@ urlpatterns = [
     path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post-delete'),
     path('logout/', auth_view.LogoutView.as_view(template_name='socio/logout.html'),name='logout'),
     path('deactivate/', views.delete_user, name='socio-delete'),
+    path('filtered/', views.filter_list, name='socio-filter'),
+    path('deactivate/confirm', views.delete_user_confirm, name='socio-delete-confirm'),
 ]
