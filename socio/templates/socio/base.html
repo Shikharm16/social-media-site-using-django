@@ -33,12 +33,12 @@
 <body style="background: #F5F5F5;">
 <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
   
-  <a class="navbar-brand" 
+  <a class="navbar-brand nul" 
 {% if user.is_authenticated %}
   href="{% url 'socio-feed' %}"
   {% endif %}>
     
-    <img src="/static/images/sociologo.png" width="30" height="30" class="d-inline-block align-top rounded-circle" style="background-color: white" alt="display logo">
+    <img src="/static/images/sociologo.png" width="30" height="30" class="d-inline-block align-top rounded-circle " style="background-color: white" alt="display logo">
    Socio
   </a>
 
@@ -52,18 +52,18 @@
 
  <ul class="nav navbar-nav navbar-right">
       
-      <li class="nav-item nul" >
-        <a class="nav-link" href="{% url 'socio-home' %}"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
-      </li>
+      
       {% if user.is_authenticated %}
       <li class="nav-item nul">
         <a class="nav-link" href="{% url 'socio-filter' %}"><i class="fa fa-search" aria-hidden="true"></i> Search</a>
       </li>
       
       <li class="nav-item nul">
-        <a class="nav-link" href="{% url 'socio-feed' %}"><i class="fa fa-user" aria-hidden="true"></i> Feed</a>
+        <a class="nav-link" href="{% url 'socio-feed' %}"><i class="fa fa-inbox" aria-hidden="true"></i> Newsfeed</a>
       </li>
-      
+      <li class="nav-item nul">
+        <a class="nav-link" href="{% url 'socio-dashboard' %}"><i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard</a>
+      </li>
       
       <li class="nav-item dropdown nul">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -71,17 +71,22 @@
                 {{ user.first_name}} {{ user.last_name}} 
               </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="{% url 'socio-profile' %}"><i class="fa fa-user" aria-hidden="true"></i> Update Profile</a>
+            <a class="dropdown-item" href="{% url 'socio-profile' %}"><i class="fa fa-user-circle-o" aria-hidden="true"></i> Update Profile</a>
             <a class="dropdown-item" href="{% url 'password_reset' %}"><i class="fa fa-key" aria-hidden="true"></i> Change Password</a>
             <div class="dropdown-divider"></div>
 
             <a class="dropdown-item" href="{% url 'socio-delete' %}"><i class="fa fa-cog" aria-hidden="true"></i> Delete Account</a>
-            <a class="dropdown-item" href="{% url 'logout' %}"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a>
+            
           </div>
         </li>
-         <!-- <li class="nav-item"></li> -->
+         <li class="nav-item nul" >
+      <a class="nav-link" href="{% url 'logout' %}"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a>
+      </li>
 
       {% else %}
+      <li class="nav-item nul" >
+      <a class="nav-link" href="{% url 'socio-home' %}"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
+      </li>
        <li class="nav-item nul">
         <a class="nav-link" href="{% url 'login' %}"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a>
       </li> 

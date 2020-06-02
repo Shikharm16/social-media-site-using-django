@@ -5,5 +5,24 @@
         <small class="text-muted">
             <a href="{% url 'login' %}">Log In Again</a>
         </small>
+    </br></br>
+        <p>
+        	Redirecting to Home page in <span id="count" style="color: darkblue;">6</span> seconds!!</br>
+        	<progress value="0" max="5" id="progressBar"></progress>
+        </p>
     </div>
+
+ <script>
+
+var timeleft = 5;
+var downloadTimer = setInterval(function(){
+  if(timeleft <= 0){
+    window.location.href = "{% url 'socio-home' %}";
+  }
+  document.getElementById("progressBar").value = 5 - timeleft;
+  document.getElementById("count").innerHTML = timeleft;
+  timeleft -= 1;
+}, 1000);
+</script>
+
 {% endblock content %}

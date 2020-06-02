@@ -7,7 +7,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('login/', auth_view.LoginView.as_view(template_name='socio/login.html'),name='login'),
+    path('login/', auth_view.LoginView.as_view(template_name='socio/login.html'
+        ,extra_context={'title':'Welcome - Login to socio'}),name='login'),
     path('password-reset/', 
     	auth_view.PasswordResetView.as_view(template_name='socio/password_reset.html'),
     	name='password_reset'),

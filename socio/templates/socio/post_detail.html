@@ -28,7 +28,16 @@
               </p>
             {% endif %}
             <p class="article-content">{{ object.caption }}</p>
-          </div>
+            <p class="article-content">{{ total_likes }}  <i class="fa fa-heart fa-lg" style="color: red;" aria-hidden="true"></i></p>
+            <form method="POST" action="{% url 'socio-like' %}">
+              {% csrf_token%}
+            {% if is_liked %}
+            <button type="submit" name="post_id" value="{{object.id}}" class="btn btn-danger">DisLike</button>
+            {% else %}
+            <button type="submit" name="post_id" value="{{object.id}}" class="btn btn-primary">like</button>
+            {% endif %}
+            </form>
+          
         </article>
       
 {% endblock content %}

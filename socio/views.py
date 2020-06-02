@@ -1,5 +1,5 @@
-from django.shortcuts import render,redirect
-from django.http import HttpResponse
+from django.shortcuts import render,redirect,get_object_or_404
+from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth.forms import UserCreationForm
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -16,16 +16,38 @@ from django.views.generic import (
 from django.contrib.auth.models import User
 from django.contrib import messages
 
-class PostDetailView(LoginRequiredMixin,DetailView):
-    model = Post
+# class PostDetailView(LoginRequiredMixin,DetailView):
+#     model = Post
+#     def get_context_data(self, *args, **kwargs): 
+#         context = super(PostDetailView, self).get_context_data(*args, **kwargs)
+#         context["title"] = 'Post Details'
+              
+#         return context
+
+@login_required    
+def post_detail(request,pk):
+    post=Post.objects.get(id=pk)
+    is_liked=False
+    if post.likes.filter(id=request.user.id).exists():
+        is_liked=True
+    context={
+    'title': 'Post Details',
+    'object':post,
+    'is_liked':is_liked,
+    'total_likes':post.likecount()
+    }
+    return render(request,'socio/post_detail.html',context)
 
 
 class PostListView(LoginRequiredMixin,ListView):
     model = Post
-    title='Feed'
-    template_name = 'socio/feed.html'  # <app>/<model>_<viewtype>.html
+    template_name = 'socio/feed.html'
     context_object_name = "posts"
     ordering = ['-date_posted']
+    def get_context_data(self, *args, **kwargs): 
+        context = super(PostListView, self).get_context_data(*args, **kwargs)
+        context["title"] = 'Newsfeed'              
+        return context
 
 
 
@@ -102,9 +124,8 @@ def signup(request):
 
 @login_required
 def filter_list(request):
-    #ordering = ['-date_posted']
-    f = PostFilter(request.GET, queryset=Post.objects.all())
-    return render(request, 'socio/filtered.html', {'filter': f,'title':'Result search Post'})
+    f = PostFilter(request.GET, queryset=Post.objects.all().order_by('-date_posted'))
+    return render(request, 'socio/filtered.html', {'filter': f,'title':'Search Post in Socio'})
 
 def home(request):
     context = {
@@ -112,6 +133,31 @@ def home(request):
     }
     return render(request,'socio/home.html',context)
 
+
+@login_required
+def dashboard(request):
+    logged_in_user = request.user
+    logged_in_user_posts = Post.objects.filter(author=logged_in_user).order_by('-date_posted')
+    cnt=logged_in_user_posts.count()
+    context = {
+        'title':'DashBoard',
+        'posts': logged_in_user_posts,
+        'count':cnt
+    }
+    return render(request,'socio/dashboard.html',context)
+
+def postlike(request):
+    if request.method == 'POST':
+        post=get_object_or_404(Post,id=request.POST.get('post_id'))
+        is_liked=False
+        if post.likes.filter(id=request.user.id).exists():
+            post.likes.remove(request.user)
+            is_liked=False
+        else:
+            post.likes.add(request.user)
+            is_liked=True
+
+        return HttpResponseRedirect(post.get_absolute_url())
 
 
 # @login_required
@@ -136,5 +182,5 @@ def profile(request):
 	context= {
 	'uform':uform,
 	'pform':pform,
-	'title':'Profile'}
+	'title':'Update Profile'}
 	return render(request,'socio/profile.html',context)

@@ -19,6 +19,7 @@
             </div>
             <img src="{{ post.image.url}}" class="imgpost">
             <h2>{{ post.title }}</h2>
+            <p class="article-content">{{ post.likecount }}  <i class="fa fa-heart fa-lg" style="color: red;" aria-hidden="true"></i></p>
             <a class="article-title" href="{% url 'post-detail' post.id %}" style="color: green;">Click to read Caption!</a>
             
           </div>

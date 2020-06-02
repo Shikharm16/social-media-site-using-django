@@ -11,12 +11,16 @@ class Post(models.Model):
 	title=models.CharField(max_length=100)
 	caption=models.TextField()
 	link=models.URLField(blank=True,default="")
+	likes=models.ManyToManyField(User,related_name='likes',blank=True)
 	
 	date_posted=models.DateTimeField(default=timezone.now)
 	author=models.ForeignKey(User , on_delete=models.CASCADE)
 
 	def __str__(self):
-		return f'{self.author.username} Post'
+		return f'{self.author.username}\'s Post- {self.title}'
+
+	def likecount(self):
+		return self.likes.count()
 
 	def get_absolute_url(self):
 		return reverse('post-detail', kwargs={'pk': self.pk})

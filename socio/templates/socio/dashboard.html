@@ -1,0 +1,40 @@
+{% extends "socio/base.html" %}
+{% block content %}
+ <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'socio-feed'  %}">Back to News Feed!</a>
+      <article class="media content-section row">
+      	<div>
+      		<h2>
+      			Hey {{ user.first_name}}, Welcome to your Dashboard !
+      		</h2>
+          {% if count %}
+      		<p>
+      			You have uploaded {{ count }} post !!
+      		</p>
+          {% else %}
+          <p>
+            You dont have any post!!
+          </p>
+          {% endif %}
+          <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'post-create'  %}">New Post</a>
+        </div>
+      </article>
+
+ {% for post in posts %}
+<article class="media content-section row">
+          <img class="rounded-circle article-img" src="{{ post.author.profile.profile_image.url }}">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="{% url 'socio-profile'%}">{{ post.author }}
+              </a>
+              <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
+            </div>
+            <img src="{{ post.image.url}}" class="imgpost">
+            <h2>{{ post.title }}</h2>
+            <a class="article-title" href="{% url 'post-detail' post.id %}" style="color: red;">Click to read Caption!</a>
+            
+          </div>
+</article>
+
+
+{% endfor %}
+{% endblock content %}
