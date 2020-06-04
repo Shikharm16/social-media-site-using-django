@@ -29,15 +29,51 @@
             {% endif %}
             <p class="article-content">{{ object.caption }}</p>
             <p class="article-content">{{ total_likes }}  <i class="fa fa-heart fa-lg" style="color: red;" aria-hidden="true"></i></p>
-            <form method="POST" action="{% url 'socio-like' %}">
-              {% csrf_token%}
-            {% if is_liked %}
-            <button type="submit" name="post_id" value="{{object.id}}" class="btn btn-danger">DisLike</button>
-            {% else %}
-            <button type="submit" name="post_id" value="{{object.id}}" class="btn btn-primary">like</button>
-            {% endif %}
-            </form>
-          
+
+            <div>
+              <form method="POST" action="{% url 'socio-like' %}">
+                  {% csrf_token%}
+                {% if is_liked %}
+                <button  type="submit" name="post_id" value="{{object.id}}" 
+                class="btn btn-danger">DisLike</button>
+                {% else %}
+                <button  type="submit" name="post_id" value="{{object.id}}" 
+                class="btn btn-primary">like</button>
+                {% endif %}
+              </form>
+
+              <!-- <form method="POST" action="{% url 'socio-bookmark' %}">
+                  {% csrf_token%}
+                {% if is_liked %}class="likebutton" data-catid="{{ post.id }}"class="likebutton" data-catid="{{ post.id }}"
+                <button type="submit" name="post_id" value="{{object.id}}" 
+                class="btn btn-secondary">Post saved!</button>
+                {% else %}
+                <button type="submit" name="post_id" value="{{object.id}}" 
+                class="btn btn-primary">Bookmark</button>
+                {% endif %} -->
+              </form>
+              
+            </div>
+
         </article>
-      
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script type="text/javascript">
+    $('.likebutton').click(function(){
+    var catid;
+    catid = $(this).attr("data-catid");
+    $.ajax(
+    {
+        type:"GET",
+        url: "/likes",
+        data:{
+                 post_id: catid
+        },
+        success: function( data ) 
+        {
+            $( '#like'+ catid ).remove();
+            $( '#message' ).text(data);
+        }
+     })
+});
+</script>  -->     
 {% endblock content %}

@@ -1,6 +1,11 @@
 {% extends "socio/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
+<div class="jumbotron">
+  <h1 class="display-4">Make a New Post!!</h1>
+  <hr class="my-4">
+  <p><i>Its time to rock</i></p>
+</div>
     <div class="content-section">
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}

@@ -1,24 +1,23 @@
 {% extends "socio/base.html" %}
 {% block content %}
  <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'socio-feed'  %}">Back to News Feed!</a>
-      <article class="media content-section row">
-      	<div>
-      		<h2>
-      			Hey {{ user.first_name}}, Welcome to your Dashboard !
-      		</h2>
+<div class="jumbotron">
+  <h1 class="display-4">Hey {{ user.first_name}}, Welcome to your Dashboard !</h1>
+  
+        <hr class="my-4">
           {% if count %}
-      		<p>
-      			You have uploaded {{ count }} post !!
-      		</p>
+          <p class="lead">
+            You have uploaded {{ count }} post !!
+          </p>
           {% else %}
-          <p>
-            You dont have any post!!
+          <p class="lead">
+            You don't have any post!!
           </p>
           {% endif %}
-          <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'post-create'  %}">New Post</a>
-        </div>
-      </article>
 
+  
+  <a class="btn btn-primary btn-lg" href="{% url 'post-create'  %}" role="button">New Post</a>
+</div>
  {% for post in posts %}
 <article class="media content-section row">
           <img class="rounded-circle article-img" src="{{ post.author.profile.profile_image.url }}">

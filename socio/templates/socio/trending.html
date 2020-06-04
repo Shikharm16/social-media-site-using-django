@@ -1,0 +1,25 @@
+{% extends "socio/base.html" %}
+{% block content %}
+
+<div class="jumbotron">
+  <h1 class="display-4">What's Trending?</h1>
+  <hr class="my-4">
+  <p><i>Most liked Post of our app!!</i></p>
+</div>
+{% for post in posts|slice:":2" %}
+<article class="media content-section row" style="align-content: center;">
+
+          <div class="card mb-3">
+            <img class="card-img-top" src="{{ post.image.url}}" alt="Card image cap" style="height: 240px;width: 250px;">
+            <div class="card-body">
+              <h5 class="card-title">{{ post.title }}</h5>
+              <p class="card-text">By : {{ post.author }} </p>
+              <p class="card-text"><small class="text-muted">{{ post.likecount }} <i class="fa fa-heart fa-lg" style="color: red;" aria-hidden="true"></i>&nbsp;
+                <a class="btn btn-secondary btn-sm mt-1 mb-1" 
+                href="{% url 'post-detail' post.id %}">Checkout</a>
+               Now!!</small></p>
+            </div>
+        </div>
+</article>
+{% endfor %}
+{% endblock content %}

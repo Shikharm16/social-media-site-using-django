@@ -5,6 +5,7 @@ from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from .models import Post
+from django.db.models import Count
 from .filters import PostFilter
 from django.views.generic import (
     ListView,
@@ -133,6 +134,20 @@ def home(request):
     }
     return render(request,'socio/home.html',context)
 
+def bookmark(request):
+    # post=Post.objects.get(id=pk)
+    context = {
+        'title':'Bookmark'
+    }
+    return render(request,'socio/bookmark.html',context)
+
+def trending(request):
+    post=Post.objects.annotate(like_count=Count('likes')).order_by('-like_count','-date_posted')
+    context = {
+        'title':'Trending',
+        'posts':post,
+    }
+    return render(request,'socio/trending.html',context)
 
 @login_required
 def dashboard(request):
