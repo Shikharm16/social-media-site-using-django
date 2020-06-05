@@ -1,3 +1,4 @@
+
 {% extends "socio/base.html" %}
 {% block content %}
 <div>
@@ -40,40 +41,43 @@
                 <button  type="submit" name="post_id" value="{{object.id}}" 
                 class="btn btn-primary">like</button>
                 {% endif %}
-              </form>
+              </form>  
 
-              <!-- <form method="POST" action="{% url 'socio-bookmark' %}">
-                  {% csrf_token%}
-                {% if is_liked %}class="likebutton" data-catid="{{ post.id }}"class="likebutton" data-catid="{{ post.id }}"
-                <button type="submit" name="post_id" value="{{object.id}}" 
-                class="btn btn-secondary">Post saved!</button>
-                {% else %}
-                <button type="submit" name="post_id" value="{{object.id}}" 
-                class="btn btn-primary">Bookmark</button>
-                {% endif %} -->
-              </form>
               
             </div>
+            
 
         </article>
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-    <script type="text/javascript">
-    $('.likebutton').click(function(){
-    var catid;
-    catid = $(this).attr("data-catid");
-    $.ajax(
-    {
-        type:"GET",
-        url: "/likes",
-        data:{
-                 post_id: catid
-        },
-        success: function( data ) 
-        {
-            $( '#like'+ catid ).remove();
-            $( '#message' ).text(data);
-        }
-     })
-});
-</script>  -->     
+
+<form method="POST">
+  {% csrf_token %}
+    {{comment_form.as_p}}
+    <input type="submit" name="comment" class="btn btn-warning">
+  
+</form>    
+
+<div class="main-comment-section">
+  {{comments.count}} Comment{{comments|pluralize}}
+</div>
+
+{% for comment in comments %}
+  <blockquote class="blockquote">
+    <p>{{ comment.content}}</p>
+    <footer class="blockquote-footer">
+      By <cite>{{comment.user|capfirst}}
+
+        {% ifequal  object.author.id user.id%}
+        <a href="{% url 'socio-comment' comment.id %}" style="color: #585858;"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></a>
+        {% endifequal %}
+        {% ifequal comment.user.id user.id%}
+            {% ifequal comment.user.id object.author.id%}
+            {% else %}
+            <a href="{% url 'socio-comment' comment.id %}" style="color: #585858;"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></a>
+            {% endifequal %}
+        {% endifequal %}
+        </cite> 
+    </footer>
+  </blockquote>
+{% endfor %}
+
 {% endblock content %}

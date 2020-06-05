@@ -19,9 +19,9 @@ urlpatterns = [
     path('', views.home, name='socio-home'),
     path('Newsfeed/', PostListView.as_view(), name='socio-feed'),
     path('trending/', views.trending, name='socio-trending'),
-    # path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),extra_context={'title':'Socio Newsfeed'}
+# path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),extra_context={'title':'Socio Newsfeed'}
     path('post/<int:pk>/', views.post_detail, name='post-detail'),
-    path('post/new/', PostCreateView.as_view(), name='post-create'),
+    path('post/new/', PostCreateView.as_view(extra_context={'title':'New Post'}), name='post-create'),
     path('post/<int:pk>/update/', PostUpdateView.as_view(), name='post-update'),
     path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post-delete'),
     path('logout/', auth_view.LogoutView.as_view(template_name='socio/logout.html'),name='logout'),
@@ -29,6 +29,7 @@ urlpatterns = [
     path('likes/',views.postlike,name='socio-like'),
     path('dashboard/', views.dashboard, name='socio-dashboard'),
     path('bookmark/', views.bookmark, name='socio-bookmark'),
+    path('comment/<int:id>', views.deletecomment, name='socio-comment'),
     path('filtered/', views.filter_list, name='socio-filter'),
     path('deactivate/confirm/', views.delete_user_confirm, name='socio-delete-confirm'),
 ]

@@ -2,7 +2,7 @@
 {% block content %}
  <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'socio-feed'  %}">Back to News Feed!</a>
 <div class="jumbotron">
-  <h1 class="display-4">Hey {{ user.first_name}}, Welcome to your Dashboard !</h1>
+  <h1 class="display-4">Hey {{ user.first_name|capfirst }}, Welcome to your Dashboard !</h1>
   
         <hr class="my-4">
           {% if count %}
@@ -19,21 +19,27 @@
   <a class="btn btn-primary btn-lg" href="{% url 'post-create'  %}" role="button">New Post</a>
 </div>
  {% for post in posts %}
-<article class="media content-section row">
-          <img class="rounded-circle article-img" src="{{ post.author.profile.profile_image.url }}">
-          <div class="media-body">
-            <div class="article-metadata">
-              <a class="mr-2" href="{% url 'socio-profile'%}">{{ post.author }}
-              </a>
-              <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
-            </div>
-            <img src="{{ post.image.url}}" class="imgpost">
-            <h2>{{ post.title }}</h2>
-            <a class="article-title" href="{% url 'post-detail' post.id %}" style="color: red;">Click to read Caption!</a>
-            
-          </div>
-</article>
+ {% if forloop.first %}<div class="row">{% endif %}
+  <div class="col-sm-4">
+    <article class="media content-section row">
+              <img class="rounded-circle article-img" src="{{ post.author.profile.profile_image.url }}">
+              <div class="media-body ">
+                <div class="article-metadata">
+                  <a class="mr-2" href="{% url 'socio-profile'%}">{{ post.author }}
+                  </a>
+                  <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
+                  <img src="{{ post.image.url}}" class="imgpost" style="width: 100%;height: auto;">
+                <h4>{{ post.title }}</h4>
+                <a class="article-title" href="{% url 'post-detail' post.id %}" style="color: red;">Click for Reciepe!!</a>
 
+                </div>
+                
+                
+              </div>
+    </article>
+  </div>  
+{% if forloop.counter|divisibleby:3 %}</div><div class="row">{% endif %}
+{% if forloop.last %}</div>{% endif %}
 
 {% endfor %}
 {% endblock content %}

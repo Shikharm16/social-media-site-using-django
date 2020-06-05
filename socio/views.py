@@ -1,10 +1,10 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth.forms import UserCreationForm
-from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
+from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, CommentForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
-from .models import Post
+from .models import Post,Comment
 from django.db.models import Count
 from .filters import PostFilter
 from django.views.generic import (
@@ -28,16 +28,42 @@ from django.contrib import messages
 @login_required    
 def post_detail(request,pk):
     post=Post.objects.get(id=pk)
+    ied=pk
+    comments=Comment.objects.filter(post=post).order_by("-pk")
     is_liked=False
     if post.likes.filter(id=request.user.id).exists():
         is_liked=True
+    else:
+        is_liked=False
+
+    if request.method == 'POST':
+        cf=CommentForm(request.POST or None)
+        if cf.is_valid():
+            content=request.POST.get('content')
+            comment=Comment.objects.create(post=post,user=request.user,content=content)
+            comment.save()
+            return redirect(post.get_absolute_url())
+    else:
+        cf=CommentForm()
+
     context={
     'title': 'Post Details',
+    'comments':comments,
+    'ied':ied,
     'object':post,
     'is_liked':is_liked,
-    'total_likes':post.likecount()
+    'total_likes':post.likecount(),
+    'comment_form':cf
     }
     return render(request,'socio/post_detail.html',context)
+
+def deletecomment(request,id):
+    comment=get_object_or_404(Comment,id=id)
+    if comment.user == request.user:
+        comment.delete()
+        return redirect(comment.post.get_absolute_url())
+    else:
+        raise Http404
 
 
 class PostListView(LoginRequiredMixin,ListView):
@@ -55,6 +81,7 @@ class PostListView(LoginRequiredMixin,ListView):
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     fields = ['image','title', 'caption','link']
+    success_url = '/dashboard'
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -64,7 +91,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
     fields = ['image','title', 'caption','link']
-    # success_url = '/feed/'
+    success_url = '/dashboard'
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -79,7 +106,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
-    success_url = '/feed/'
+    success_url = '/dashboard'
 
     def test_func(self):
         post = self.get_object()
@@ -141,6 +168,8 @@ def bookmark(request):
     }
     return render(request,'socio/bookmark.html',context)
 
+
+@login_required
 def trending(request):
     post=Post.objects.annotate(like_count=Count('likes')).order_by('-like_count','-date_posted')
     context = {
@@ -157,7 +186,7 @@ def dashboard(request):
     context = {
         'title':'DashBoard',
         'posts': logged_in_user_posts,
-        'count':cnt
+        'count': cnt
     }
     return render(request,'socio/dashboard.html',context)
 

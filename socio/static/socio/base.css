@@ -6,6 +6,18 @@ body {
     padding: 90px 60px;
   
 }
+.equal {
+  display: flex;
+  display: -webkit-flex;
+  flex-wrap: wrap;
+}
+
+@media (min-width: 768px) {
+  .row.equal {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
   .imgg
   {
   height: 125px;

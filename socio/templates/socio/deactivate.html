@@ -4,7 +4,7 @@
       <article class="media content-section row">
       	<div>
       		<p>
-      			Hey {{ user.first_name}}, Had a nice time !
+      			Hey {{ user.first_name|capfirst }}, Had a nice time !
       		</p>
              <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'socio-feed'  %}">Changed your mind!</a>
               <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'socio-delete-confirm' %}">Are you sure want to delete your account?</a>

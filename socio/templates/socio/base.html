@@ -68,7 +68,7 @@
       <li class="nav-item dropdown nul">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img src="{{ user.profile.profile_image.url }}" width="29" height="27" class="rounded-circle" alt="display logo">
-                {{ user.first_name}} {{ user.last_name}} 
+                {{ user.first_name|capfirst }} {{ user.last_name|capfirst }} 
               </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="{% url 'socio-trending' %}"><i class="fa fa-line-chart" aria-hidden="true"></i> Trending</a>
