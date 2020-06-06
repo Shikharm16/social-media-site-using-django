@@ -30,11 +30,18 @@ def post_detail(request,pk):
     post=Post.objects.get(id=pk)
     ied=pk
     comments=Comment.objects.filter(post=post).order_by("-pk")
+
     is_liked=False
     if post.likes.filter(id=request.user.id).exists():
         is_liked=True
     else:
         is_liked=False
+
+    is_favorite=False
+    if post.favorites.filter(id=request.user.id).exists():
+        is_favorite=True
+    else:
+        is_favorite=False
 
     if request.method == 'POST':
         cf=CommentForm(request.POST or None)
@@ -51,16 +58,53 @@ def post_detail(request,pk):
     'comments':comments,
     'ied':ied,
     'object':post,
+    'is_favorite': is_favorite,
     'is_liked':is_liked,
     'total_likes':post.likecount(),
     'comment_form':cf
     }
     return render(request,'socio/post_detail.html',context)
 
+def favorite(request,id):
+    post=get_object_or_404(Post,id=id)
+    if post.favorites.filter(id=request.user.id).exists():
+        messages.success(request,f'bookmark removed !')
+        post.favorites.remove(request.user)
+    else:
+        post.favorites.add(request.user)
+        messages.success(request,f'Post Saved! You can check it out in your Bookmarks.')
+    return HttpResponseRedirect(post.get_absolute_url())
+
+def favorite_list(request):
+    user=request.user
+    post=user.favorites.all()
+    context={
+    'post':post,
+    'title': 'Bookmarks'
+    }
+    return render(request,'socio/bookmark.html',context)
+
+
+def postlike(request):
+    if request.method == 'POST':
+        post=get_object_or_404(Post,id=request.POST.get('post_id'))
+        is_liked=False
+        if post.likes.filter(id=request.user.id).exists():
+            post.likes.remove(request.user)
+            is_liked=False
+        else:
+            post.likes.add(request.user)
+            is_liked=True
+
+        return HttpResponseRedirect(post.get_absolute_url())
+
+
+
 def deletecomment(request,id):
     comment=get_object_or_404(Comment,id=id)
     if comment.user == request.user:
         comment.delete()
+        messages.success(request,f'Comment deleted!')
         return redirect(comment.post.get_absolute_url())
     else:
         raise Http404
@@ -161,13 +205,6 @@ def home(request):
     }
     return render(request,'socio/home.html',context)
 
-def bookmark(request):
-    # post=Post.objects.get(id=pk)
-    context = {
-        'title':'Bookmark'
-    }
-    return render(request,'socio/bookmark.html',context)
-
 
 @login_required
 def trending(request):
@@ -189,20 +226,6 @@ def dashboard(request):
         'count': cnt
     }
     return render(request,'socio/dashboard.html',context)
-
-def postlike(request):
-    if request.method == 'POST':
-        post=get_object_or_404(Post,id=request.POST.get('post_id'))
-        is_liked=False
-        if post.likes.filter(id=request.user.id).exists():
-            post.likes.remove(request.user)
-            is_liked=False
-        else:
-            post.likes.add(request.user)
-            is_liked=True
-
-        return HttpResponseRedirect(post.get_absolute_url())
-
 
 # @login_required
 # def feed(request):

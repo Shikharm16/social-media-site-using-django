@@ -12,7 +12,7 @@ class Post(models.Model):
 	caption=models.TextField()
 	link=models.URLField(blank=True,default="")
 	likes=models.ManyToManyField(User,related_name='likes',blank=True)
-	
+	favorites=models.ManyToManyField(User,related_name='favorites',blank=True)
 	date_posted=models.DateTimeField(default=timezone.now)
 	author=models.ForeignKey(User , on_delete=models.CASCADE)
 
@@ -60,3 +60,4 @@ class Comment(models.Model):
 
 	def __str__(self):
 		return 'comment on {} by {}'.format(self.post.title,self.user.username)
+

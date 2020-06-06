@@ -28,8 +28,9 @@ urlpatterns = [
     path('deactivate/', views.delete_user, name='socio-delete'),
     path('likes/',views.postlike,name='socio-like'),
     path('dashboard/', views.dashboard, name='socio-dashboard'),
-    path('bookmark/', views.bookmark, name='socio-bookmark'),
     path('comment/<int:id>', views.deletecomment, name='socio-comment'),
     path('filtered/', views.filter_list, name='socio-filter'),
     path('deactivate/confirm/', views.delete_user_confirm, name='socio-delete-confirm'),
+    url(r'(?P<id>\d+)/saved/$',views.favorite,name='socio-favorite'),
+    path('bookmark/', views.favorite_list, name='socio-bookmark'),
 ]

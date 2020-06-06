@@ -18,6 +18,7 @@
   
   <a class="btn btn-primary btn-lg" href="{% url 'post-create'  %}" role="button">New Post</a>
 </div>
+
  {% for post in posts %}
  {% if forloop.first %}<div class="row">{% endif %}
   <div class="col-sm-4">

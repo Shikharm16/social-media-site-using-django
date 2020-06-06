@@ -2,7 +2,7 @@
 {% extends "socio/base.html" %}
 {% block content %}
 <div>
-  <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'socio-feed'%}">Back</a>
+  <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'socio-feed'%}">Back to Neewsfeed</a>
 </div>
       
         <article class="media content-section row">
@@ -10,8 +10,7 @@
           <div class="media-body">
 
             <div class="article-metadata">
-              <a class="mr-2" href="#">{{ object.author }}</a>
-              <small class="text-muted">{{ object.date_posted|date:"F d, Y" }}</small>
+              <strong><p>{{ object.author }}</p></strong>
               {% if object.author == user %}
                 <div>
                   <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'post-update' object.id %}">Update</a>
@@ -21,6 +20,7 @@
             </div>
             <p class="article-content">
             <img src="{{object.image.url}}" class="imgpost">
+              <small class="text-muted">{{ object.date_posted|date:"F d, Y" }}</small>
             </p>
             <h2 class="article-title">{{ object.title }}</h2>
             {% if object.link != "" %}
@@ -29,8 +29,10 @@
               </p>
             {% endif %}
             <p class="article-content">{{ object.caption }}</p>
-            <p class="article-content">{{ total_likes }}  <i class="fa fa-heart fa-lg" style="color: red;" aria-hidden="true"></i></p>
-
+            <p class="article-content">{{ total_likes }}  <i class="fa fa-heart fa-lg" style="color: red;" aria-hidden="true"></i>{% if is_favorite %}  &nbsp;&nbsp;saved &nbsp;&nbsp;<a href="{% url 'socio-favorite' id=object.id %}"><i class="fa fa-bookmark fa-2x" style="color: green;" aria-hidden="true"></i></a>{%else%}  &nbsp;&nbsp;Bookmark &nbsp;&nbsp;<a href="{% url 'socio-favorite' id=object.id %}"><i class="fa fa-bookmark-o fa-2x" style="color: green;" aria-hidden="true"></i></a>{% endif %}
+            </p>
+             
+            
             <div>
               <form method="POST" action="{% url 'socio-like' %}">
                   {% csrf_token%}
