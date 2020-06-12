@@ -1,6 +1,13 @@
 {% extends "socio/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
+<div class="jumbotron">
+  <h1 class="display-4">Welcome to Socio App!</h1>
+  <h5>Join the amazing site today!</h5>
+  <hr class="my-4">
+  <p><i>Sign up here to make an account on the most trending app of 2020.</i></p>
+</div>
+
     <div class="content-section">
         <form method="POST">
             {% csrf_token %}

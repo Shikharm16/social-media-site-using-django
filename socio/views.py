@@ -6,7 +6,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from .models import Post,Comment
 from django.db.models import Count
+from django.utils.datastructures import MultiValueDictKeyError
 from .filters import PostFilter
+import pandas as pd
 from django.views.generic import (
     ListView,
     DetailView,
@@ -16,13 +18,12 @@ from django.views.generic import (
 )
 from django.contrib.auth.models import User
 from django.contrib import messages
-
+# from notify.signals import notify
 # class PostDetailView(LoginRequiredMixin,DetailView):
 #     model = Post
 #     def get_context_data(self, *args, **kwargs): 
 #         context = super(PostDetailView, self).get_context_data(*args, **kwargs)
 #         context["title"] = 'Post Details'
-              
 #         return context
 
 @login_required    
@@ -65,6 +66,7 @@ def post_detail(request,pk):
     }
     return render(request,'socio/post_detail.html',context)
 
+@login_required
 def favorite(request,id):
     post=get_object_or_404(Post,id=id)
     if post.favorites.filter(id=request.user.id).exists():
@@ -75,6 +77,7 @@ def favorite(request,id):
         messages.success(request,f'Post Saved! You can check it out in your Bookmarks.')
     return HttpResponseRedirect(post.get_absolute_url())
 
+@login_required
 def favorite_list(request):
     user=request.user
     post=user.favorites.all()
@@ -84,7 +87,7 @@ def favorite_list(request):
     }
     return render(request,'socio/bookmark.html',context)
 
-
+@login_required
 def postlike(request):
     if request.method == 'POST':
         post=get_object_or_404(Post,id=request.POST.get('post_id'))
@@ -94,21 +97,18 @@ def postlike(request):
             is_liked=False
         else:
             post.likes.add(request.user)
+            # notify.send(request.user, recipient=post.author, actor=request.user,
+            #     verb='liked your post', nf_type='liked_post')
             is_liked=True
 
         return HttpResponseRedirect(post.get_absolute_url())
 
-
-
+@login_required
 def deletecomment(request,id):
     comment=get_object_or_404(Comment,id=id)
-    if comment.user == request.user:
-        comment.delete()
-        messages.success(request,f'Comment deleted!')
-        return redirect(comment.post.get_absolute_url())
-    else:
-        raise Http404
-
+    comment.delete()
+    messages.success(request,f'Comment deleted!')
+    return redirect(comment.post.get_absolute_url())
 
 class PostListView(LoginRequiredMixin,ListView):
     model = Post
@@ -120,8 +120,6 @@ class PostListView(LoginRequiredMixin,ListView):
         context["title"] = 'Newsfeed'              
         return context
 
-
-
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     fields = ['image','title', 'caption','link']
@@ -130,7 +128,6 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
-
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
@@ -146,7 +143,6 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         if self.request.user == post.author:
             return True
         return False
-
 
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
@@ -205,6 +201,50 @@ def home(request):
     }
     return render(request,'socio/home.html',context)
 
+@login_required
+def document(request):
+    if request.method == 'POST':
+        try:
+            f=request.FILES['file']
+            messages.success(request,f'file uploaded')
+            #print("Uploaded")
+
+            data_xls = pd.read_excel(f)
+            df=data_xls[['Name of Hospital ','Sex','DATE OF COLLECT SAMPLE','Age']]
+
+            if len(df['Sex'].unique()) == 2:
+                msg1="Valid Sex"
+
+            if 'DATE OF COLLECT SAMPLE' in df:
+                try:
+                    pd.to_datetime(df['DATE OF COLLECT SAMPLE'], format='%d/%m/%Y')
+                except:
+                    msg2="incorrect date format"
+
+            if 'Age' in df:
+                if df['Age'].between(0,110).all():
+                    msg3="Valid Age"
+                else:
+                    msg3="Invalid age"
+
+            data={'Sex': msg1,
+            'Date':msg2,
+            'Age':msg3
+            }
+            print(data)
+            context = {
+                'title':'docxx',
+                'data':data
+            }
+                                
+            return render(request,'socio/fileupload.html',context)
+
+        except MultiValueDictKeyError:
+            messages.warning(request,f'No file selected! Upload again!')
+    context = {
+        'title':'docxx'
+    }
+    return render(request,'socio/fileupload.html',context)
 
 @login_required
 def trending(request):
@@ -251,3 +291,4 @@ def profile(request):
 	'pform':pform,
 	'title':'Update Profile'}
 	return render(request,'socio/profile.html',context)
+

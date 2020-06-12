@@ -49,27 +49,6 @@ body {
   border-radius: 3px;
   margin-bottom: 20px;
 }
-
-.topbar .btn{
-  position: absolute;
-  top: 27%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  background: transparent;
-  color: white;
-  font-size: 16px;
-  padding: 12px 24px;
-  border: 1px solid;
-  cursor: pointer;
-  border-radius: 5px;
-  text-align: center;
-}
-.topbar .btn:hover
-{
-  background-color: white;
-}
-
 .content-section {
   background: #ffffff;
   padding-left: 50px;

@@ -3,9 +3,9 @@
 <div class="jumbotron">
   <h1 class="display-4">Your bookmarked post!!</h1>
   <hr class="my-4">
-  <p><i>Coming Soon!</i></p>
+  <p><i>Your Saved post!</i></p>
 </div>
-
+{%if post%}
  {% for post in post %}
  {% if forloop.first %}<div class="row">{% endif %}
   <div class="col-sm-4">
@@ -13,13 +13,15 @@
               <img class="rounded-circle article-img" src="{{ post.author.profile.profile_image.url }}">
               <div class="media-body ">
                 <div class="article-metadata">
-                  <a class="mr-2" href="{% url 'socio-profile'%}">{{ post.author }}
-                  </a>
+                  
+                  <strong class="mr-2" href="{% url 'socio-profile'%}">{{ post.author }}</strong>
+                  
                   <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
                   <img src="{{ post.image.url}}" class="imgpost" style="width: 100%;height: auto;">
                 <h4>{{ post.title }}</h4>
-                <a class="article-title" href="{% url 'post-detail' post.id %}" style="color: red;">Click for Reciepe!!</a>
-
+                
+                <a class="btn btn-secondary btn-sm mt-1 mb-1" 
+                    href="{% url 'post-detail' post.id %}">Checkout <span class="badge badge-info">Now !</span></a>
                 </div>
                 
                 
@@ -30,4 +32,11 @@
 {% if forloop.last %}</div>{% endif %}
 
 {% endfor %}
+{% else %}
+  <article class="media content-section row">
+    <div class="media-body">
+        <h2> You have not saved any post!!</h2>
+    </div>
+  </article>
+{% endif %}
 {% endblock content %}

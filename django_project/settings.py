@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django_filters',
     'tinymce',
+    'notify',
     'django.contrib.admin',
     'registration',
     'django.contrib.auth',
@@ -137,4 +138,3 @@ EMAIL_PORT=587
 EMAIL_USE_TLS=True
 EMAIL_HOST_USER='mahajanshikhar16@gmail.com'
 EMAIL_HOST_PASSWORD='Shikhar@#16'
-\

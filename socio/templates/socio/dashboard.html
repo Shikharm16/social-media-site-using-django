@@ -21,25 +21,24 @@
 
  {% for post in posts %}
  {% if forloop.first %}<div class="row">{% endif %}
-  <div class="col-sm-4">
+  <div class="col-sm-6">
     <article class="media content-section row">
               <img class="rounded-circle article-img" src="{{ post.author.profile.profile_image.url }}">
               <div class="media-body ">
                 <div class="article-metadata">
-                  <a class="mr-2" href="{% url 'socio-profile'%}">{{ post.author }}
-                  </a>
+                  <strong class="mr-2" href="{% url 'socio-profile'%}">{{ post.author }}</strong>
                   <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
                   <img src="{{ post.image.url}}" class="imgpost" style="width: 100%;height: auto;">
                 <h4>{{ post.title }}</h4>
-                <a class="article-title" href="{% url 'post-detail' post.id %}" style="color: red;">Click for Reciepe!!</a>
-
+                <a class="btn btn-primary btn-sm mt-1 mb-1" 
+                    href="{% url 'post-detail' post.id %}">Checkout <span class="badge badge-light">Now !</span></a>
                 </div>
                 
                 
               </div>
     </article>
   </div>  
-{% if forloop.counter|divisibleby:3 %}</div><div class="row">{% endif %}
+{% if forloop.counter|divisibleby:2 %}</div><div class="row">{% endif %}
 {% if forloop.last %}</div>{% endif %}
 
 {% endfor %}

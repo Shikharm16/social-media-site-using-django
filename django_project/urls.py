@@ -1,4 +1,4 @@
-
+from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path,include
 from django.contrib.auth import views as auth_view
@@ -25,7 +25,7 @@ urlpatterns = [
     	auth_view.PasswordResetCompleteView.as_view(template_name='socio/password_reset_complete.html'),
     	name='password_reset_complete'),
 
-    
+    # url(r'^notifications/', include('notify.urls', 'notifications')),
     path('', include('socio.urls')),
 ]
 

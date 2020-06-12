@@ -33,4 +33,5 @@ urlpatterns = [
     path('deactivate/confirm/', views.delete_user_confirm, name='socio-delete-confirm'),
     url(r'(?P<id>\d+)/saved/$',views.favorite,name='socio-favorite'),
     path('bookmark/', views.favorite_list, name='socio-bookmark'),
+    path('docx/', views.document, name='socio-docx'),
 ]

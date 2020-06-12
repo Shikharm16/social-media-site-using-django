@@ -71,12 +71,12 @@
                 {{ user.first_name|capfirst }} {{ user.last_name|capfirst }} 
               </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="{% url 'socio-trending' %}"><i class="fa fa-line-chart" aria-hidden="true"></i> Trending</a>
-            <a class="dropdown-item" href="{% url 'socio-bookmark' %}"><i class="fa fa-bookmark" aria-hidden="true"></i> Bookmark</a>
+            <!-- <a class="dropdown-item" href="/templates/notifications/includes/liked_post.html"><i class="fa fa-line-chart" aria-hidden="true"></i> Notifications</a> -->
+            
             <a class="dropdown-item" href="{% url 'socio-profile' %}"><i class="fa fa-user-circle-o" aria-hidden="true"></i> Update Profile</a>
             <a class="dropdown-item" href="{% url 'password_reset' %}"><i class="fa fa-key" aria-hidden="true"></i> Change Password</a>
             <div class="dropdown-divider"></div>
-
+            <a class="dropdown-item" href="{% url 'socio-docx' %}"><i class="fa fa-file" aria-hidden="true"></i> Documents</a>
             <a class="dropdown-item" href="{% url 'socio-delete' %}"><i class="fa fa-cog" aria-hidden="true"></i> Delete Account</a>
             
           </div>
@@ -109,7 +109,35 @@
     </div>
     {% endfor %}
     {% endif%}
+    <div class="row">
+    <div class="col-sm-8">
       {% block content %}{% endblock %}
+    </div>
+    {% if user.is_authenticated %}
+    <div class="col-md-4">
+          <div class="content-section">
+            <h3>Socio</h3>
+            <p class='text-muted'>Explore : Quick access
+              <ul class="list-group">
+                
+                <li class="list-group-item list-group-item-light" style="text-align: center;">
+            <a class="btn btn-success btn-sm mt-1 mb-1" 
+            href="{% url 'post-create'%}">Create New Post</a></li>
+                
+                <li class="list-group-item list-group-item-light" style="text-align: center;">
+            <a class="btn btn-info btn-sm mt-1 mb-1" 
+            href="{% url 'socio-trending'%}">What's Trending?</a>
+                </li>
+
+                <li class="list-group-item list-group-item-light" style="text-align: center;"><a class="btn btn-warning btn-sm mt-1 mb-1" href="{% url 'socio-bookmark'%}">Your Bookmarks!</a></li>
+                
+              </ul>
+            </p>
+          </div>
+        </div>
+    </div>
+    {% endif %}
+      
     
     
     </div>
@@ -117,6 +145,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    }
 
 </body> 
 </html>
