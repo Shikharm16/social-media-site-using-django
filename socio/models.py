@@ -61,3 +61,17 @@ class Comment(models.Model):
 	def __str__(self):
 		return 'comment on {} by {}'.format(self.post.title,self.user.username)
 
+class checkmk(models.Model):
+	mid = models.AutoField(primary_key=True)
+	d_image=models.ImageField(upload_to="detected")
+
+	def save(self,*args,**kwargs):
+		super().save(*args,**kwargs)
+		img = Image.open(self.d_image.path)
+		if img.height > 300 or img.width > 300:
+			output_size = (300, 300)
+			img.thumbnail(output_size)
+			img.save(self.d_image.path)
+
+	def road(self):
+		return self.d_image.path

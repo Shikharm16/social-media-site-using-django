@@ -6,37 +6,34 @@
   <p><i>Your Saved post!</i></p>
 </div>
 {%if post%}
- {% for post in post %}
+{% for post in post %}
  {% if forloop.first %}<div class="row">{% endif %}
-  <div class="col-sm-4">
+  <div class="col-sm-6">
     <article class="media content-section row">
-              <img class="rounded-circle article-img" src="{{ post.author.profile.profile_image.url }}">
-              <div class="media-body ">
-                <div class="article-metadata">
-                  
-                  <strong class="mr-2" href="{% url 'socio-profile'%}">{{ post.author }}</strong>
-                  
-                  <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
-                  <img src="{{ post.image.url}}" class="imgpost" style="width: 100%;height: auto;">
-                <h4>{{ post.title }}</h4>
-                
-                <a class="btn btn-secondary btn-sm mt-1 mb-1" 
-                    href="{% url 'post-detail' post.id %}">Checkout <span class="badge badge-info">Now !</span></a>
-                </div>
-                
-                
-              </div>
+        <img class="rounded-circle article-img" src="{{ post.author.profile.profile_image.url }}">
+        <div class="media-body ">
+          <div class="article-metadata">
+            
+            <strong class="mr-2" href="{% url 'socio-profile'%}">{{ post.author }}</strong>
+              
+            <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
+            <img src="{{ post.image.url}}" class="imgpost" style="width: 100%;height: auto;">
+            <h4>{{ post.title }}</h4>
+            
+            <a class="btn btn-secondary btn-sm mt-1 mb-1" 
+            href="{% url 'post-detail' post.id %}">Checkout <span class="badge badge-info">Now !</span></a>
+          </div>
+        </div>
     </article>
   </div>  
-{% if forloop.counter|divisibleby:3 %}</div><div class="row">{% endif %}
+{% if forloop.counter|divisibleby:2 %}</div><div class="row">{% endif %}
 {% if forloop.last %}</div>{% endif %}
-
 {% endfor %}
 {% else %}
-  <article class="media content-section row">
-    <div class="media-body">
-        <h2> You have not saved any post!!</h2>
-    </div>
-  </article>
+<article class="media content-section row">
+  <div class="media-body">
+    <h2> You have not saved any post!!</h2>
+  </div>
+</article>
 {% endif %}
 {% endblock content %}

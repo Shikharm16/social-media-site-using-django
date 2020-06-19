@@ -3,18 +3,17 @@
 <div class="jumbotron">
   <h1 class="display-4">Welcome to Upload doc section!!</h1>
   <hr class="my-4">
-  <p><i>Upload your photo identity documents here to be a verified user!!</i></p>
+  <p><i>Upload your documents here to be read its content!!</i></p>
 </div>
 <!-- enctype="multipart/form-data" -->
 <div class="content-section" >
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Upload</legend>
-                <input type="file" name="file"/>
+                {{form.as_p}}
             </fieldset>
             <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Upload</button>
+                <button class="btn btn-outline-info" type="submit" value="file">Upload</button>
             </div>
         </form>
 </div>
@@ -22,10 +21,9 @@
 
 <div class="content-section">
 
-    <h2>validation Result</h2>
-    {% for key,value in data.items%}
-    <p>{{key}} : {{value}}</p>
-    {% endfor %}
+    <h2>Text in image</h2>
+    <p>{{data}}</p>
+   
 
 </div>
 

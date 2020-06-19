@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import Profile, Comment
+from .models import Profile, Comment,checkmk
 
 class UserRegisterForm(UserCreationForm):
 	email=forms.EmailField(required=True)
@@ -24,6 +24,13 @@ class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['profile_image']
+
+class checkimage(forms.ModelForm):
+
+    class Meta:
+        model=checkmk
+        fields=['d_image']
+
 
 class CommentForm(forms.ModelForm):
     content=forms.CharField(label="",widget=forms.Textarea(

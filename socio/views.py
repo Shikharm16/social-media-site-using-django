@@ -1,13 +1,17 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth.forms import UserCreationForm
-from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, CommentForm
+from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, CommentForm,checkimage
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
-from .models import Post,Comment
+from .models import Post,Comment,checkmk
 from django.db.models import Count
 from django.utils.datastructures import MultiValueDictKeyError
 from .filters import PostFilter
+from PIL import Image
+import cv2
+from django.core.mail import send_mail
+import os
 import pandas as pd
 from django.views.generic import (
     ListView,
@@ -18,13 +22,6 @@ from django.views.generic import (
 )
 from django.contrib.auth.models import User
 from django.contrib import messages
-# from notify.signals import notify
-# class PostDetailView(LoginRequiredMixin,DetailView):
-#     model = Post
-#     def get_context_data(self, *args, **kwargs): 
-#         context = super(PostDetailView, self).get_context_data(*args, **kwargs)
-#         context["title"] = 'Post Details'
-#         return context
 
 @login_required    
 def post_detail(request,pk):
@@ -201,51 +198,35 @@ def home(request):
     }
     return render(request,'socio/home.html',context)
 
-@login_required
+##############################################################################
+
+
 def document(request):
     if request.method == 'POST':
-        try:
-            f=request.FILES['file']
-            messages.success(request,f'file uploaded')
-            #print("Uploaded")
-
-            data_xls = pd.read_excel(f)
-            df=data_xls[['Name of Hospital ','Sex','DATE OF COLLECT SAMPLE','Age']]
-
-            if len(df['Sex'].unique()) == 2:
-                msg1="Valid Sex"
-
-            if 'DATE OF COLLECT SAMPLE' in df:
-                try:
-                    pd.to_datetime(df['DATE OF COLLECT SAMPLE'], format='%d/%m/%Y')
-                except:
-                    msg2="incorrect date format"
-
-            if 'Age' in df:
-                if df['Age'].between(0,110).all():
-                    msg3="Valid Age"
-                else:
-                    msg3="Invalid age"
-
-            data={'Sex': msg1,
-            'Date':msg2,
-            'Age':msg3
-            }
-            print(data)
-            context = {
-                'title':'docxx',
-                'data':data
-            }
-                                
-            return render(request,'socio/fileupload.html',context)
-
-        except MultiValueDictKeyError:
-            messages.warning(request,f'No file selected! Upload again!')
+        doc=checkimage(request.POST,request.FILES)
+        if doc.is_valid():
+            doc.save()
+            imgname=doc.cleaned_data.get('d_image')
+            #print(imgname)
+            p='/django_project/media/detected/'+str(imgname)
+            f=os.path.dirname(os.path.dirname(os.path.abspath(str(imgname)))).replace('\\','/')
+            img=cv2.imread(f+p,3)
+            print(type(img))
+            import pytesseract
+            pytesseract.pytesseract.tesseract_cmd=r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+            text=pytesseract.image_to_string(img)
+            print("text: ",text)
+    else:
+        doc=checkimage()
+        text=None
     context = {
-        'title':'docxx'
+    'title':'docx',
+    'form':doc,
+    'data':text
     }
     return render(request,'socio/fileupload.html',context)
 
+################################################################################
 @login_required
 def trending(request):
     post=Post.objects.annotate(like_count=Count('likes')).order_by('-like_count','-date_posted')
@@ -267,14 +248,6 @@ def dashboard(request):
     }
     return render(request,'socio/dashboard.html',context)
 
-# @login_required
-# def feed(request):
-#     context = {
-#         'posts': Post.objects.all(),
-#         'title':'Feed'
-#     }
-#     return render(request,'socio/feed.html',context)
-
 @login_required
 def profile(request):
 	if request.method == 'POST':
@@ -292,3 +265,10 @@ def profile(request):
 	'title':'Update Profile'}
 	return render(request,'socio/profile.html',context)
 
+# from notify.signals import notify
+# class PostDetailView(LoginRequiredMixin,DetailView):
+#     model = Post
+#     def get_context_data(self, *args, **kwargs): 
+#         context = super(PostDetailView, self).get_context_data(*args, **kwargs)
+#         context["title"] = 'Post Details'
+#         return context
