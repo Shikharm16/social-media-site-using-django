@@ -3,8 +3,8 @@
 </br
 
 start project by : </br>
-> Entering into the django_project directory
-> open command prompt here
+> Entering into the django_project directory </br>
+> open command prompt here </br>
 > type command : python manage.py runerver
 </br>
 
